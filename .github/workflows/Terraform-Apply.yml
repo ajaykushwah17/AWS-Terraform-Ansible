@@ -38,6 +38,6 @@ jobs:
       - name: Run Ansible Playbook
         if: success()
         run: |
-          ansible-playbook -i localhost, ansible_playbook.yml
+          ansible-playbook -i localhost, ansible-playbook.yml
         env:
           ANSIBLE_HOST_KEY_CHECKING: False
