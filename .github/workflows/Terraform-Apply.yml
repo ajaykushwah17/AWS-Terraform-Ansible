@@ -35,11 +35,9 @@ jobs:
       - name: Install Ansible
         run: sudo apt update && sudo apt install -y ansible
 
-- name: Run Ansible Playbook
-  if: success()
-  run: |
-    ansible-playbook -i localhost, ansible-playbook.yml
-  env:
-    ANSIBLE_HOST_KEY_CHECKING: False
-  working-directory: ./AWS-Terraform-Ansible
-
+      - name: Run Ansible Playbook
+        if: always()  # Remove if: success() and set it to always()
+        run: |
+          ansible-playbook -i localhost, AWS-Terraform-Ansible/ansible/ansible-playbook.yml
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: False
