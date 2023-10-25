@@ -1,15 +1,13 @@
 ---
-- name: Install Java and Tomcat
-  hosts: ec2_instances
+- name: Install and configure Tomcat on EC2 instance
+  hosts: MyEC2Instance  # Replace with your EC2 instance name or inventory group
+  remote_user: MyEC2Instance  # Replace with your EC2 instance SSH user
   become: yes
-  tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
 
+  tasks:
     - name: Install Java
-      apt:
-        name: openjdk-8-jdk
+      yum:
+        name: java-1.8.0-openjdk
         state: present
 
     - name: Download and extract Tomcat
@@ -22,17 +20,9 @@
         src: /tmp/tomcat.tar.gz
         dest: /opt
         remote_src: yes
-        owner: Demo
-        group: Demo_ta
+        owner: ec2-user  # Replace with your EC2 instance user
+        group: ec2-user  # Replace with your EC2 instance user
         mode: 0755
-
-    - name: Configure Tomcat
-      template:
-        src: /path/to/your/tomcat/conf/server.xml.j2
-        dest: /opt/apache-tomcat-9.0.56/conf/server.xml
-        owner: your_user
-        group: your_group
-        mode: 0644
 
     - name: Start Tomcat
       service:
