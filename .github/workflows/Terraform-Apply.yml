@@ -41,5 +41,5 @@ jobs:
     ansible-playbook -i localhost, ansible-playbook.yml
   env:
     ANSIBLE_HOST_KEY_CHECKING: False
-  working-directory: https://github.com/ajaykushwah17/AWS-Terraform-Ansible 
+  working-directory: ./AWS-Terraform-Ansible
 
