@@ -1,0 +1,45 @@
+---
+- name: Install Java and Tomcat
+  hosts: ec2_instances
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Java
+      apt:
+        name: openjdk-8-jdk
+        state: present
+
+    - name: Download and extract Tomcat
+      get_url:
+        url: "https://archive.apache.org/dist/tomcat/tomcat9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz"
+        dest: /tmp/tomcat.tar.gz
+
+    - name: Extract Tomcat
+      unarchive:
+        src: /tmp/tomcat.tar.gz
+        dest: /opt
+        remote_src: yes
+        owner: Demo
+        group: Demo_ta
+        mode: 0755
+
+    - name: Configure Tomcat
+      template:
+        src: /path/to/your/tomcat/conf/server.xml.j2
+        dest: /opt/apache-tomcat-9.0.56/conf/server.xml
+        owner: your_user
+        group: your_group
+        mode: 0644
+
+    - name: Start Tomcat
+      service:
+        name: tomcat
+        state: started
+
+    - name: Enable Tomcat to start on boot
+      service:
+        name: tomcat
+        enabled: yes
