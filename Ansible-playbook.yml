@@ -1,35 +1,18 @@
 ---
-- name: Install and configure Tomcat on EC2 instance
-  hosts: MyEC2Instance  # Replace with your EC2 instance name or inventory group
-  remote_user: MyEC2Instance  # Replace with your EC2 instance SSH user
-  become: yes
-
+- hosts: all
+  become: true
   tasks:
-    - name: Install Java
-      yum:
-        name: java-1.8.0-openjdk
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Tomcat
+      apt:
+        name: tomcat9
         state: present
 
-    - name: Download and extract Tomcat
-      get_url:
-        url: "https://archive.apache.org/dist/tomcat/tomcat9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz"
-        dest: /tmp/tomcat.tar.gz
-
-    - name: Extract Tomcat
-      unarchive:
-        src: /tmp/tomcat.tar.gz
-        dest: /opt
-        remote_src: yes
-        owner: ec2-user  # Replace with your EC2 instance user
-        group: ec2-user  # Replace with your EC2 instance user
-        mode: 0755
-
-    - name: Start Tomcat
+    - name: Start Tomcat service
       service:
-        name: tomcat
+        name: tomcat9
         state: started
-
-    - name: Enable Tomcat to start on boot
-      service:
-        name: tomcat
         enabled: yes
