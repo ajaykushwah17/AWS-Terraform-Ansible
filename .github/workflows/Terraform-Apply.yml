@@ -35,13 +35,14 @@ jobs:
       - name: Install Ansible
         run: sudo apt update && sudo apt install -y ansible
 
-      - name: Get EC2 Instance IP
+      - name: Get EC2 Instance ID
         run: |
           INSTANCE_ID=$(terraform output ec2_instance_id)
+          INSTANCE_ID=$(echo $INSTANCE_ID | tr -d '"')  # Remove double quotes
           echo "Instance ID: $INSTANCE_ID"
           PRIVATE_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[0].Instances[0].PrivateIpAddress' --output text)
           echo "Private IP: $PRIVATE_IP"
           echo "EC2_IP=$PRIVATE_IP" >> $GITHUB_ENV
-
-      - name: Run Ansible Playbook
-        run: ansible-playbook -i ${{ env.EC2_IP }}, playbook.yml
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
