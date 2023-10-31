@@ -56,3 +56,7 @@ resource "aws_instance" "awsec2demo" {
     device_index        = 0
   }
 }
+
+output "ec2_instance_id" {
+  value = aws_instance.awsec2demo.id
+}
