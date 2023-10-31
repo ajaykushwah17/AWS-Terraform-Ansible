@@ -52,12 +52,11 @@ resource "aws_instance" "awsec2demo" {
   }
 
   network_interface {
-    network_interface_id       = aws_network_interface.awsec2demo.id
-    device_index              = 0
-    associate_public_ip_address = true
+    network_interface_id = aws_network_interface.awsec2demo.id
+    device_index        = 0
   }
+}
 
-  output "ec2_instance_id" {
-    value = aws_instance.awsec2demo.id
-  }
+output "ec2_instance_id" {
+  value = aws_instance.awsec2demo.id
 }
