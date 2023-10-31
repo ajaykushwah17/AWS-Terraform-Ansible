@@ -35,14 +35,13 @@ jobs:
       - name: Install Ansible
         run: sudo apt update && sudo apt install -y ansible
 
-- name: Get EC2 Instance ID
-  run: |
-    INSTANCE_ID=$(terraform output ec2_instance_id)
-    echo "Instance ID: $INSTANCE_ID"
-    PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
-    echo "Public IP: $PUBLIC_IP"
-    echo "::set-output name=ec2_ip::$PUBLIC_IP"
-  env:
-    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
+      - name: Get EC2 Instance ID
+        run: |
+          INSTANCE_ID=$(terraform output ec2_instance_id)
+          echo "Instance ID: $INSTANCE_ID"
+          PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
+          echo "Public IP: $PUBLIC_IP"
+          echo "::set-output name=ec2_ip::$PUBLIC_IP"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
