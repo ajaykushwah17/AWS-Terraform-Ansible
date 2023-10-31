@@ -63,6 +63,24 @@ resource "aws_eip" "awsec2demo_eip" {
   instance = aws_instance.awsec2demo.id
 }
 
+# Create an Internet Gateway
+resource "aws_internet_gateway" "example" {
+  vpc_id = aws_vpc.awsec2demo.id
+}
+
+# Create a Route Table Association
+resource "aws_route_table_association" "example" {
+  subnet_id      = aws_subnet.awsec2demo.id
+  route_table_id = aws_vpc.awsec2demo.default_route_table_id
+}
+
+# Create a Route
+resource "aws_route" "example" {
+  route_table_id         = aws_vpc.awsec2demo.default_route_table_id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.example.id
+}
+
 output "ec2_instance_id" {
   value = aws_instance.awsec2demo.id
 }
