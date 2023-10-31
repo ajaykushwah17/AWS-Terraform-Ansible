@@ -1,7 +1,7 @@
-## Random
+# Random pet for naming
 resource "random_pet" "sg" {}
 
-## AWS VPC
+# AWS VPC
 resource "aws_vpc" "awsec2demo" {
   cidr_block = "172.16.0.0/16"
 
@@ -10,7 +10,7 @@ resource "aws_vpc" "awsec2demo" {
   }
 }
 
-## AWS VPC Subnet
+# AWS VPC Subnet
 resource "aws_subnet" "awsec2demo" {
   vpc_id     = aws_vpc.awsec2demo.id
   cidr_block = "172.16.10.0/24"
@@ -20,7 +20,7 @@ resource "aws_subnet" "awsec2demo" {
   }
 }
 
-## AWS Network Interface
+# AWS Network Interface
 resource "aws_network_interface" "awsec2demo" {
   subnet_id    = aws_subnet.awsec2demo.id
   private_ips = ["172.16.10.100"]
@@ -30,10 +30,11 @@ resource "aws_network_interface" "awsec2demo" {
   }
 }
 
-## AWS Security Group
+# AWS Security Group
 resource "aws_security_group" "awsec2demo" {
   name     = "${random_pet.sg.id}-sg"
   vpc_id   = aws_vpc.awsec2demo.id
+
   ingress {
     from_port   = 8080
     to_port     = 8080
@@ -42,7 +43,7 @@ resource "aws_security_group" "awsec2demo" {
   }
 }
 
-## AWS EC2
+# AWS EC2
 resource "aws_instance" "awsec2demo" {
   ami           = "ami-0dbc3d7bc646e8516" # us-east-1
   instance_type = "t2.micro"
@@ -57,6 +58,15 @@ resource "aws_instance" "awsec2demo" {
   }
 }
 
+# Create an Elastic IP (Public IP)
+resource "aws_eip" "awsec2demo_eip" {
+  instance = aws_instance.awsec2demo.id
+}
+
 output "ec2_instance_id" {
   value = aws_instance.awsec2demo.id
+}
+
+output "public_ip" {
+  value = aws_eip.awsec2demo_eip.public_ip
 }
