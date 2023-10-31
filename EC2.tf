@@ -56,7 +56,6 @@ resource "aws_instance" "awsec2demo" {
 
   network_interface {
     subnet_id          = aws_subnet.awsec2demo.id
-    private_ips       = ["172.16.10.100"]
     security_groups   = [aws_security_group.awsec2demo.name]
   }
 
